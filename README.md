@@ -1,2 +1,2 @@
 # reform
-Pure data model declaration for ReactJS
+Pure data model declaration for ReactJS Forms
