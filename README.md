@@ -1,2 +1,2 @@
 # DataForm
-Pure data model declaration for ReactJS Forms
+Declaration of forms in ReactJS apps using JSON data
