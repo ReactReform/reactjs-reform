@@ -1,7 +1,7 @@
 {
   "name": "data-form-react",
   "version": "1.0.0",
-  "description": "Pure data model declaration for ReactJS Forms",
+  "description": "DataForm React",
   "main": "lib/index.js",
   "module": "lib/index.es.js",
   "jsnext:main": "lib/index.es.js",
@@ -14,15 +14,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AntonioArts/dataform.git"
+    "url": "git+https://github.com/AntonioArts/data-form-react.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AntonioArts/dataform/issues"
+    "url": "https://github.com/AntonioArts/data-form-react/issues"
   },
-  "homepage": "https://github.com/AntonioArts/dataform#readme",
+  "homepage": "https://github.com/AntonioArts/data-form-react#readme",
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "@types/react": "^16.9.16",

@@ -1,4 +1,4 @@
-# DataForm
+# DataForm React
 
 [![Build Status](https://travis-ci.com/AntonioArts/data-form-react.svg?branch=master)](https://travis-ci.com/AntonioArts/data-form-react)
 
