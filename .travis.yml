@@ -11,4 +11,5 @@ deploy:
   api_key: "$API_KEY"
   skip_cleanup: true
   on:
+    tags: true
     repo: AntonioArts/data-form-react
