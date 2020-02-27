@@ -1,18 +1,10 @@
 import * as React from 'react'
 import validator from 'validator'
 
-import { createEventLikeObject } from './utils/eventLikeObject' 
-
 import { TextInput } from './components/TextInput'
 import { SelectInput } from './components/SelectInput'
 import { TextAreaInput } from './components/TextAreaInput'
 import { Button } from './components/Button'
-
-interface EventLikeObject {
-    target: {
-        value: string
-    }
-}
 
 interface Option {
     value: string
@@ -27,12 +19,18 @@ interface InputPrototype {
     error: string
     options: Array<string> | Array<Option>
     placeholder: string
+    validation: string
+}
+
+interface ButtonPrototype {
+    text: string
 }
 
 interface OwnProps {
     className: string
     fields: Array<InputPrototype>
-    handleSubmit: (fields) => void
+    button: ButtonPrototype
+    handleSubmit: (fields: Object) => void
     requestProcessing: boolean
     requestError: string | undefined
     loadingIndicator: any
@@ -40,11 +38,13 @@ interface OwnProps {
 
 type Props = OwnProps
 
+type ChangeEvents = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>
+
 interface State {
     fields: Array<InputPrototype>
 }
 
-export class Reform extends React.Component<Props, State> {
+export class DataForm extends React.Component<Props, State> {
     constructor(props: OwnProps) {
         super(props)
 
@@ -68,20 +68,21 @@ export class Reform extends React.Component<Props, State> {
             if (field.type === 'SelectInput') {
                 if (validator.isEmpty(String(field.value))) {
                     const value = typeof field.options[0] === 'object' ? field.options[0].value : field.options[0]
-                    this.handleInputChange(createEventLikeObject(value), id)
+                    this.updateInputValue(value, id)
                 }
             }
         })
     }
 
-	private handleInputChange(event: EventLikeObject, inputId: number) {
-        const updateValue = (value: string) => {
-            this.state.fields[inputId].value = value
-            this.setState({ fields: this.state.fields })
-        }
+    private updateInputValue(value: InputPrototype['value'], inputId: number) {
+        this.state.fields[inputId].value = value
+        this.setState({ fields: this.state.fields })
+    }
+
+	private handleInputChange(event: ChangeEvents, inputId: number) {
         switch (this.state.fields[inputId].type) {
             default:
-                updateValue(event.target.value)
+                this.updateInputValue(event.target.value, inputId)
             break;
         }
 	}
@@ -93,7 +94,7 @@ export class Reform extends React.Component<Props, State> {
     private validate(inputId?: number) {
         let isValid = true
 
-        const validateField = (field) => {
+        const validateField = (field: InputPrototype) => {
             if (field.validation) {
                 switch (field.validation) {
                     case 'notEmpty':
@@ -131,7 +132,7 @@ export class Reform extends React.Component<Props, State> {
         return isValid
     }
 
-    private handleSubmit(event) {
+    private handleSubmit(event: Event) {
         event.preventDefault()
 
         if (this.validate()) {
@@ -150,9 +151,9 @@ export class Reform extends React.Component<Props, State> {
 
     public render() {
         const { fields } = this.state
-        const { className, requestProcessing, loadingIndicator } = this.props
+        const { button, className, requestProcessing, loadingIndicator } = this.props
         return (
-            <form className={className} onSubmit={this.handleSubmit}>
+            <form className={className} onSubmit={() => this.handleSubmit}>
             {fields.map((field, inputId: number) => {
                 switch(field.type) {
                     case 'TextInput':
@@ -190,19 +191,13 @@ export class Reform extends React.Component<Props, State> {
                                 onBlur={() => this.handleInputBlur(inputId)}
                                 validation={field.error}/>
                         )
-                    case 'Button':
-                        return (
-                            <Button 
-                                key={inputId}
-                                label={field.text}
-                                disabled={requestProcessing}/>
-                        )
                     default:
                         return (
                             <div>{field.type} not supported</div>
                         )
                 }
             })}
+            <Button label={button.text} disabled={requestProcessing}/>
             { requestProcessing && (loadingIndicator || <div>Processing...</div>) }
             </form>
         )
